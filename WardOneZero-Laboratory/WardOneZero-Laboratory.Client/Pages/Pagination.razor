@@ -3,22 +3,22 @@
 <div class="pagination">
     @if (TotalPages > 5 && CurrentPage > 1)
     {
-        <button type="button" @onclick="() => ChangePage(CurrentPage - 1)">@("<")</button>
+        <button type="button" @onclick="() => OnPageChanged(CurrentPage - 1)">@("<")</button>
     }
     @for (int i = StartPage; i <= EndPage; i++)
     {
         var pageNumber = i;
-        <button type="button" class="@(pageNumber == CurrentPage ? "active" : "")" @onclick="() => ChangePage(pageNumber)" disabled="@(CurrentPage == pageNumber)">@i</button>
+        <button type="button" class="@(pageNumber == CurrentPage ? "active" : "")" @onclick="() => OnPageChanged(pageNumber)" disabled="@(CurrentPage == pageNumber)">@i</button>
     }
     @if (TotalPages > 5 && CurrentPage < TotalPages)
     {
-        <button type="button" @onclick="() => ChangePage(CurrentPage + 1)" disabled="@(CurrentPage == TotalPages)">@(">")</button>
+        <button type="button" @onclick="() => OnPageChanged(CurrentPage + 1)" disabled="@(CurrentPage == TotalPages)">@(">")</button>
     }
 </div>
 @code {
     [Parameter] public int TotalPages { get; set; } = 6;
+    [Parameter] public int CurrentPage { get; set; } = 1;
     [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
-    private int CurrentPage { get; set; } = 1;
     private int StartPage { get; set; }
     private int EndPage { get; set; }
 
@@ -28,13 +28,14 @@
         await base.OnParametersSetAsync();
     }
 
-    private void ChangePage(int page)
+    private Task OnPageChanged(int page)
     {
         if (page != CurrentPage)
         {
             CurrentPage = page;
             Paginate();
         }
+        return CurrentPageChanged.InvokeAsync(page);
     }
 
     private void Paginate()

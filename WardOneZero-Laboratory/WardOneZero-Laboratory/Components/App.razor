@@ -7,13 +7,22 @@
     <base href="/" />
     <link rel="stylesheet" href="@Assets["app.css"]" />
     <link rel="stylesheet" href="@Assets["WardOneZero-Laboratory.styles.css"]" />
+
+    <link rel="stylesheet" href="@Assets["main.css"]" />
+
     <ImportMap />
     <HeadOutlet @rendermode="InteractiveAuto" />
+    <title>WardOneZero</title>
 </head>
 
 <body>
-    <Routes @rendermode="InteractiveAuto" />
+    <main>
+        <Routes @rendermode="InteractiveAuto" />
+    </main>
     <script src="_framework/blazor.web.js"></script>
+    <footer>
+        <a href="https://github.com/wardonezero">Created By Eduard Melik-Hakobyan</a>
+    </footer>
 </body>
 
 </html>

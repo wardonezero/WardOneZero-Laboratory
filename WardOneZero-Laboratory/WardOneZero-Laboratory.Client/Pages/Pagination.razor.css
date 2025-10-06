@@ -1,0 +1,25 @@
+﻿.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 1%;
+}
+
+    .pagination button {
+        aspect-ratio: 1/1;
+        min-width: 100px;
+        background-color: #DDDDDD;
+        border-radius: 25%;
+        text-align: center;
+        font-size: clamp(1rem, 1vw, 2rem);
+        font-weight: 900;
+    }
+
+        .pagination button:disabled {
+            cursor: not-allowed;
+        }
+
+        .pagination button.active {
+            background-color: red;
+            color: white;
+        }

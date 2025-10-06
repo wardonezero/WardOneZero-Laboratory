@@ -1,0 +1,50 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%
+}
+
+body {
+    font-family: sans-serif;
+}
+
+body, main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    aspect-ratio: 20/9;
+    min-width: 640px;
+    min-height: 360px;
+    width: 100vw;
+    height: auto;
+    max-width: 2000px;
+    max-height: 900px;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+footer {
+}
+
+@media screen and (max-width: 960px ) {
+    main {
+        width: auto;
+        height: 100vh;
+    }
+
+    footer {
+        display: none;
+    }
+}

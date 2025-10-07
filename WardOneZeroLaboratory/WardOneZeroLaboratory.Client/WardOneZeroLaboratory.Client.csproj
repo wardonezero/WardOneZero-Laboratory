@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
 		<StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
-		<RootNamespace>WardOneZero-Laboratory.Client</RootNamespace>
+		<RootNamespace>WardOneZeroLaboratory.Client</RootNamespace>
 		<AssemblyName>$(AssemblyName.Replace(' ', '_'))</AssemblyName>
 
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
@@ -14,6 +14,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.9" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
 	</ItemGroup>
 
 </Project>

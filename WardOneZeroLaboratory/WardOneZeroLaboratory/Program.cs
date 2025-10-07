@@ -1,13 +1,13 @@
-using WardOneZero_Laboratory.Components;
+using WardOneZeroLaboratory.Components;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -30,6 +30,6 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(WardOneZero_Laboratory.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(WardOneZeroLaboratory.Client._Imports).Assembly);
 
 app.Run();

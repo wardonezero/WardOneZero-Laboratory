@@ -1,0 +1,54 @@
+﻿@page "/ImageColorChange"
+@inject ImageService ImageService
+<div class="images-container">
+    <h1>Image Color Change</h1>
+    <div class="images">
+        <div class="image-input">
+            <div class="drop-zone">
+                <InputFile OnChange="OnImageSelected" accept="image/*" />
+            </div>
+            @if (!string.IsNullOrEmpty(imageBase64))
+            {
+                <img src="@($"data:image;base64,{imageBase64}")" alt="Selected Image" />
+            }
+        </div>
+        <div class="image-output">
+            @if (!string.IsNullOrEmpty(newImageBase64))
+            {
+                <img src="@($"data:image;base64,{newImageBase64}")" alt="Modified Image" />
+            }
+        </div>
+    </div>
+    <button type="button" class="download" @onclick="OnChangeColorClicked" disabled="@(string.IsNullOrEmpty(imageBase64))">Download</button>
+</div>
+
+@code {
+    private string? imageBase64;
+    private string? newImageBase64;
+    private SixLabors.ImageSharp.Image? originalImage;
+
+    private async Task OnImageSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            const long maxFileSize = 1024 * 1024 * 4;
+            var buffer = new byte[file.Size];
+            await file.OpenReadStream(maxFileSize).ReadAsync(buffer);
+            originalImage = SixLabors.ImageSharp.Image.Load(buffer);
+            imageBase64 = Convert.ToBase64String(buffer);
+            newImageBase64 = null;
+        }
+    }
+
+    private void OnChangeColorClicked()
+    {
+        if (originalImage is null)
+            return;
+
+        var pixels = ImageService.GetPixelsHexColor(originalImage);
+        var newPixels = ImageService.ChangeImageColor(pixels);
+        var newImage = ImageService.PixelsToBitmap(newPixels, originalImage.Width, originalImage.Height);
+        newImageBase64 = ImageService.BitmapToBase64(newImage);
+    }
+}

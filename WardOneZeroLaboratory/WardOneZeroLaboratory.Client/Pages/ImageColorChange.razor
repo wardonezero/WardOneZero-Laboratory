@@ -1,5 +1,5 @@
 ﻿@page "/ImageColorChange"
-@inject ImageService ImageService
+@inject HttpClient Http
 <div class="images-container">
     <h1>Image Color Change</h1>
     <div class="images">
@@ -13,42 +13,74 @@
             }
         </div>
         <div class="image-output">
-            @if (!string.IsNullOrEmpty(newImageBase64))
+            @if (isLoading)
+            {
+                <p>⌛</p>
+            }
+            else if (!string.IsNullOrEmpty(newImageBase64))
             {
                 <img src="@($"data:image;base64,{newImageBase64}")" alt="Modified Image" />
             }
         </div>
     </div>
-    <button type="button" class="download" @onclick="OnChangeColorClicked" disabled="@(string.IsNullOrEmpty(imageBase64))">Download</button>
+    @if (!string.IsNullOrEmpty(newImageBase64) && !isLoading && imageFile is not null)
+    {
+        <a class="download"
+           href="@($"data:{imageFile.ContentType};base64,{newImageBase64}")"
+           download="@($"new_{imageFile.Name}")">
+            Download
+        </a>
+    }
+    else
+    {
+        <button type="button" class="download" disabled>Download</button>
+    }
 </div>
 
 @code {
     private string? imageBase64;
     private string? newImageBase64;
-    private SixLabors.ImageSharp.Image? originalImage;
+    private IBrowserFile? imageFile;
+    private bool isLoading;
 
     private async Task OnImageSelected(InputFileChangeEventArgs e)
     {
-        var file = e.File;
-        if (file != null)
+        imageFile = e.File;
+        if (imageFile != null)
         {
             const long maxFileSize = 1024 * 1024 * 4;
-            var buffer = new byte[file.Size];
-            await file.OpenReadStream(maxFileSize).ReadAsync(buffer);
-            originalImage = SixLabors.ImageSharp.Image.Load(buffer);
+            var buffer = new byte[imageFile.Size];
+            await imageFile.OpenReadStream(maxFileSize).ReadAsync(buffer);
             imageBase64 = Convert.ToBase64String(buffer);
             newImageBase64 = null;
+            await ChangeImageColor();
         }
     }
 
-    private void OnChangeColorClicked()
+    private async Task ChangeImageColor()
     {
-        if (originalImage is null)
+        if (imageFile is null)
             return;
 
-        var pixels = ImageService.GetPixelsHexColor(originalImage);
-        var newPixels = ImageService.ChangeImageColor(pixels);
-        var newImage = ImageService.PixelsToBitmap(newPixels, originalImage.Width, originalImage.Height);
-        newImageBase64 = ImageService.BitmapToBase64(newImage);
+        isLoading = true;
+        await Task.Delay(1);
+
+        try
+        {
+            using var content = new MultipartFormDataContent();
+            using var fileStream = imageFile.OpenReadStream(imageFile.Size);
+            content.Add(new StreamContent(fileStream), "file", imageFile.Name);
+
+            var response = await Http.PostAsync("/api/image/change-color", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                newImageBase64 = await response.Content.ReadAsStringAsync();
+            }
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 }

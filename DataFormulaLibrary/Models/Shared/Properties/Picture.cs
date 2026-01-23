@@ -1,4 +1,4 @@
-﻿namespace DataFormulaLibrary.Models.Product.Properties;
+﻿namespace DataFormulaLibrary.Models.Shared.Properties;
 
 public class Picture
 {

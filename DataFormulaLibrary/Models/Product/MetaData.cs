@@ -2,6 +2,9 @@
 
 namespace DataFormulaLibrary.Models.Product;
 
+/// <summary>
+/// Product's metadata
+/// </summary>
 public class MetaData
 {
     public int ProuductId { get; set; } = 0;

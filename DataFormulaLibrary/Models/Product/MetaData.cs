@@ -17,8 +17,6 @@ public class MetaData
 
     public int SubcategoryId { get; set; } = 0;
 
-    public float Sale { get; set; } = 0f;
-
     public ProductStatuses Status { get; set; } = 0;
 
     public DateTime ModifiedAt { get; set; }

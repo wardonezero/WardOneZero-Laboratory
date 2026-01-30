@@ -12,5 +12,5 @@ public class Product
 
     public decimal Cost { get; set; } = 0m;
     public decimal Price { get; set; } = 0m;
-    public float Sale { get; set; } = 0f;
+    public float Discount { get; set; } = 0f;
 }

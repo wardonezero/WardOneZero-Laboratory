@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DataFormulaLibrary.Enums;
+﻿namespace DataFormulaLibrary.Enums;
 
 public enum ProductStatuses
 {
-    Draft,
-    Published,
-    Hide,
-    Deleted
+    Draft = 0,
+    Published = 10,
+    Hide = 20,
+    Deleted = 30
 }

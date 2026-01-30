@@ -9,5 +9,5 @@ public class Inventory
     public List<int> DimentionsIds { get; set; } = [];
     public List<int> PicturesIds { get; set; } = [];
     public List<int> SizesIds { get; set; } = [];
-    public List<int> AttributeValuesIds { get; set; } = [];
+    public List<int> AttributesValuesIds { get; set; } = [];
 }

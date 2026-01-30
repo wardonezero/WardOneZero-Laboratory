@@ -19,7 +19,7 @@ public class MetaData
 
     public ProductStatuses Status { get; set; } = 0;
 
-    public DateTime ModifiedAt { get; set; }
+    public DateTime? ModifiedAt { get; set; }
 
     public int ModifiedByUserId { get; set; } = 0;
 

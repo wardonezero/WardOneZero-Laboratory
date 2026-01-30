@@ -6,7 +6,7 @@ public class WishListItem
     public int ProductId { get; set; } = 0;
     public int ProductPictureId { get; set; } = 0;
     public bool IsInStock { get; set; } = true;
-    public decimal Price { get; set; } = 0m;
+    public decimal Price { get; set; } = 0.0m;
     public float Discount { get; set; } = 0f;
 
 }

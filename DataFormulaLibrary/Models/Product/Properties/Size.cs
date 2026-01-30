@@ -6,9 +6,9 @@ public class Size
 
     public string Value { get; set; } = string.Empty;
 
-    public decimal Cost { get; set; } = 0m;
+    public decimal Cost { get; set; } = 0.0m;
 
-    public decimal Price { get; set; } = 0m;
+    public decimal Price { get; set; } = 0.0m;
 
-    public float Discount { get; set; } = 0f;
+    public float Discount { get; set; } = 0.0f;
 }

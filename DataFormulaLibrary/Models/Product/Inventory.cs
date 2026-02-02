@@ -10,4 +10,5 @@ public class Inventory
     public List<int> PicturesIds { get; set; } = [];
     public List<int> SizesIds { get; set; } = [];
     public List<int> AttributesValuesIds { get; set; } = [];
+    public List<int> ReviewsIds { get; set; } = [];
 }

@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\Shipping\ShipmentItem.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Models\Shipping\ShipmentItem.cs" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
   </ItemGroup>
 
 </Project>

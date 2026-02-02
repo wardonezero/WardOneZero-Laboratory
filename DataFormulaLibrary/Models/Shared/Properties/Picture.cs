@@ -6,7 +6,7 @@ public class Picture
 
     public string Extention { get; set; } = string.Empty;
 
-    public string Binary { get; set; } = string.Empty;
+    public byte[] Binary { get; set; } = [];
 
     public byte DisplayOrder { get; set; } = 0;
 }

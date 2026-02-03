@@ -5,7 +5,7 @@
 /// </summary>
 public class MetaData
 {
-    public int UserId { get; set; } = 0;
+    public int Id { get; set; } = 0;
     public int AddressId { get; set; } = 0;
     public int BillingAddressId { get; set; } = 0;
     public int ProfilePictureId { get; set; } = 0;

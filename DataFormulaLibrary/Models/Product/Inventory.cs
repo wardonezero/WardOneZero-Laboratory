@@ -2,7 +2,7 @@
 
 public class Inventory
 {
-    public int ProductId { get; set; }
+    public int Id { get; set; }
     public int InStock { get; set; } = 0;
 
     public List<int> ColorsIds { get; set; } = [];

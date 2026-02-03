@@ -7,7 +7,7 @@ namespace DataFormulaLibrary.Models.Product;
 /// </summary>
 public class MetaData
 {
-    public int ProuductId { get; set; } = 0;
+    public int Id { get; set; } = 0;
 
     public int DepartmentId { get; set; } = 0;
 

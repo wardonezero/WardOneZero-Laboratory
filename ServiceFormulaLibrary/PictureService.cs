@@ -1,10 +1,19 @@
-﻿using DataFormulaLibrary.Data;
-using DataFormulaLibrary.Models.Shared.Properties;
+﻿using DataFormulaLibrary.Models.Shared.Properties;
 using Microsoft.EntityFrameworkCore;
 
 namespace ServiceFormulaLibrary;
 
-public class PictureService(DataContext context)
+/// <summary>
+/// Provides functionality for saving and retrieving picture data in a database using a specified Entity Framework Core
+/// context.
+/// </summary>
+/// <remarks>This service enables asynchronous operations for storing and accessing pictures in a database table
+/// of your choice. It is designed to work with any Entity Framework Core <see cref="DbContext"/> implementation. The
+/// service does not track retrieved entities, making it suitable for scenarios where read-only access is
+/// required.</remarks>
+/// <typeparam name="TContext">The type of the database context to use for data access. Must derive from <see cref="DbContext"/>.</typeparam>
+/// <param name="context">The database context instance used to perform operations on the picture data. Cannot be null.</param>
+public class PictureService<TContext>(TContext context) where TContext : DbContext
 {
     /// <summary>
     /// Asynchronously saves a picture to the specified database table and returns the unique identifier of the saved
@@ -24,10 +33,10 @@ public class PictureService(DataContext context)
         {
             // PRO TIP: Use AllocateUninitializedArray to skip filling the array with zeros (CPU saver for large files)
             // Ensure the length is safely cast to int (max 2GB)
-            //int length = (int)(inputPicture.Length - inputPicture.Position);
-            //binary = GC.AllocateUninitializedArray<byte>(length);
+            int length = (int)(inputPicture.Length - inputPicture.Position);
+            binary = GC.AllocateUninitializedArray<byte>(length);
 
-            binary = new byte[inputPicture.Length - inputPicture.Position];
+            //binary = new byte[inputPicture.Length - inputPicture.Position];
             await inputPicture.ReadExactlyAsync(binary);
         }
         else

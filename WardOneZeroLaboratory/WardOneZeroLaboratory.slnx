@@ -1,6 +1,8 @@
 <Solution>
   <Project Path="../DataFormulaLibrary/DataFormulaLibrary.csproj" />
   <Project Path="../ServiceFormulaLibrary/ServiceFormulaLibrary.csproj" />
+  <Project Path="WardOneZeroCommerce/WardOneZeroCommerce.Client/WardOneZeroCommerce.Client.csproj" Id="d3d37a8f-9941-4599-bb39-2df71cba0a9c" />
+  <Project Path="WardOneZeroCommerce/WardOneZeroCommerce/WardOneZeroCommerce.csproj" Id="12332c03-2db6-4056-873e-8b663eb5fdf5" />
   <Project Path="WardOneZeroLaboratory.Client/WardOneZeroLaboratory.Client.csproj" />
   <Project Path="WardOneZeroLaboratory/WardOneZeroLaboratory.csproj" />
 </Solution>

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DataFormulaLibrary.Enums;
+﻿namespace DataFormulaLibrary.Enums;
 
 public enum UserRoles
 {
-    User,
     Guest,
     Customer,
     Consultant,
     Moderator,
+    Vendor,
     Administrator
 }

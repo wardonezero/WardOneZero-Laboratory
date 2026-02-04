@@ -4,6 +4,20 @@ namespace ServiceFormulaLibrary;
 
 public class GenericDataService<TContext>(TContext context) where TContext : DbContext
 {
+    public async Task<List<TEntity>> GetPagedAsync<TEntity>(TEntity entitny, int page = 1, byte size = 20) where TEntity : class
+    {
+        return await context.Set<TEntity>().AsNoTracking()
+            .Skip((page - 1) * size).Take(size)
+            .ToListAsync();
+    }
+
+    public async Task<List<TEntity>> GetAsync<TEntity>(List<int> ids) where TEntity : class
+    {
+        return await context.Set<TEntity>().AsNoTracking()
+            .Where(e => ids.Contains(EF.Property<int>(e, "Id")))
+            .ToListAsync();
+    }
+
     public async Task<TEntity?> GetAsync<TEntity>(int id) where TEntity : class
     {
         return await context.Set<TEntity>().AsNoTracking()

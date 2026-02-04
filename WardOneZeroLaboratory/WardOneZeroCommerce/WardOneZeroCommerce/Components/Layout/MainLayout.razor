@@ -1,9 +1,82 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+<div class="master-screen">
+    <header>
+        <div class="header-top">
+            <div class="header-top-left">
+                <div class="humburger"></div>
+                <h2 class="logo">E-Commerce</h2>
+            </div>
+            <div class="header-top-right">
+                <input type="text" placeholder="Search products" />
+                <a href="/account">A</a>
+                <a href="/account/wishlist">W</a>
+                <a href="/account/cart">C</a>
+            </div>
+        </div>
+        <div class="header-bottom">
+            @foreach (Department department in departments)
+            {
+                <a href="/products/@department.Link">@department</a>
+            }
+            <a href="/products/sale" class="red">SALE</a>
+            <a href="/products/brands">Brands</a>
+        </div>
+    </header>
+    <main>
+        @Body
+    </main>
+    <footer>
+        <div class="footer-top">
+            <div class="footer-top-left">
+                <ul>
+                    <li><strong>COMPANY</strong></li>
+                    <li><a href="/aboutus">About Us</a></li>
+                    <li><a href="/contactus">Contact Us</a></li>
+                </ul>
+                <ul>
+                    <li><strong>PRODUCTS</strong></li>
+                    <li><a href="/products">All Categories</a></li>
+                    <li><a href="/products/sale">Sale</a></li>
+                </ul>
+                <ul>
+                    <li><strong>ACCOUNT</strong></li>
+                    <li><a href="/account">My Account</a></li>
+                    <li><a href="/account/wishlist">Wish List</a></li>
+                    <li><a href="/account/cart">Shopping Cart</a></li>
+                </ul>
+                <ul>
+                    <li><strong>PARTNERAHIPS</strong></li>
+                    <li><a href="/forprofessionals">For Professionals</a></li>
+                </ul>
+            </div>
+            <div class="footer-top-right">
+                <h3>Subscribe and Get Inspired</h3>
+                <p>Don't miss out the latest news on the brands and products.</p>
+                <input type="text" placeholder="Enter your email"/>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-top">
+                <p>info@e-commerce.com</p>
+                <p>+0 00000000</p>
+            </div>
+            <div class="footer-bottom-bottom">
+                <p>Copyright © @DateTime.UtcNow.Year E-Commerce. All rights reserved.</p>
+                <a href="/">Terms & Conditions</a>
+                <a href="/">Privacy Policy</a>
+                <a href="/">Sitemap</a>
+            </div>
+        </div>
+    </footer>
+</div>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
+
+@code {
+    private List<Department> departments = [];
+}

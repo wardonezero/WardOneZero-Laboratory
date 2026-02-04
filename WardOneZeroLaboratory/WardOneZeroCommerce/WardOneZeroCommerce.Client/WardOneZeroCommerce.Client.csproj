@@ -13,4 +13,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DataFormulaLibrary\DataFormulaLibrary.csproj" />
+    <ProjectReference Include="..\..\..\ServiceFormulaLibrary\ServiceFormulaLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -11,7 +11,7 @@ public class GenericDataService<TContext>(TContext context) where TContext : DbC
             .ToListAsync();
     }
 
-    public async Task<List<TEntity>> GetAsync<TEntity>(List<int> ids) where TEntity : class
+    public async Task<List<TEntity>> GetManyAsync<TEntity>(List<int> ids) where TEntity : class
     {
         return await context.Set<TEntity>().AsNoTracking()
             .Where(e => ids.Contains(EF.Property<int>(e, "Id")))

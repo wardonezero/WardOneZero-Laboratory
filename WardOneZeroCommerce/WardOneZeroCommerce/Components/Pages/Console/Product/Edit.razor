@@ -8,7 +8,7 @@
         <button type="button">Save</button>
         <button type="button">Save and Continue Edit</button>
     </div>
-    <details open>
+    <details>
         <summary>Product Information</summary>
         <div class="product-info">
             <div>
@@ -25,7 +25,7 @@
         </div>
 
     </details>
-    <details open>
+    <details>
         <summary>Metadata & Categories</summary>
         <div class="product-metadata">
             <div>
@@ -68,7 +68,7 @@
             </div>
         </div>
     </details>
-    <details open>
+    <details>
         <summary>Configuration & Inventory</summary>
         <div class="product-configuration">
             <lable><input type="number" placeholder="In Stock" @bind="inventory.InStock" /></lable>
@@ -78,7 +78,7 @@
             <lable><input type="checkbox" @bind="configuration.IsReturnable" />Returnable</lable>
         </div>
     </details>
-    <details open>
+    <details>
         <summary>SEO (Search Engine Optimization)</summary>
         <div class="product-seo">
             <input type="text" placeholder="Meta Keywords" @bind="metaData.MetaKeywords" />

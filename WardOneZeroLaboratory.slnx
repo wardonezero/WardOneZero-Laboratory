@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="DataFormulaLibrary/DataFormulaLibrary.csproj" />
+  <Project Path="ServiceFormulaLibrary/ServiceFormulaLibrary.csproj" />
+  <Project Path="WardOneZeroCommerce/WardOneZeroCommerce.Client/WardOneZeroCommerce.Client.csproj" />
+  <Project Path="WardOneZeroCommerce/WardOneZeroCommerce/WardOneZeroCommerce.csproj" />
+  <Project Path="WardOneZeroLaboratory/WardOneZeroLaboratory.Client/WardOneZeroLaboratory.Client.csproj" />
+  <Project Path="WardOneZeroLaboratory/WardOneZeroLaboratory/WardOneZeroLaboratory.csproj" />
+</Solution>

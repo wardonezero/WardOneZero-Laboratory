@@ -1,0 +1,41 @@
+﻿.console-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+    .product-info div {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+.product-metadata {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+    .product-metadata div {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+.product-configuration {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.product-seo {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

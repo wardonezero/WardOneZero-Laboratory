@@ -1,0 +1,98 @@
+﻿@page "/console/product/create"
+@rendermode InteractiveServer
+@layout ConsoleLayout
+@using DataFormulaLibrary.Models.Product
+<div class="console-actions">
+    <h2>Create product</h2>
+    <button type="button">Save</button>
+    <button type="button">Save and Continue Edit</button>
+</div>
+<details open>
+    <summary>Product Information</summary>
+<div class="product-info">
+    <div>
+        <input type="text" placeholder="Name" @bind="product.Name" />
+        <input type="text" placeholder="Description" @bind="product.Description" />
+        <input type="text" placeholder="Short description" @bind="product.ShortDescription" />
+    </div>
+    <div>
+        <input type="number" placeholder="Cost" @bind="product.Cost" />
+        <input type="number" placeholder="Price" @bind="product.Price" />
+        <input type="number" placeholder="Discount" @bind="product.Discount" />
+    </div>
+</div>
+
+</details>
+<details open>
+    <summary>Metadata & Categories</summary>
+<div class="product-metadata">
+    <div>
+        <select @bind="metaData.DepartmentId">
+            <option value="0">Select Department</option>
+            @foreach (Department department in departments)
+            {
+                <option value="@department.Id">@department.Name</option>
+            }
+        </select>
+        <select @bind="metaData.CategoryId">
+            <option value="0">Select Category</option>
+            @foreach (Category category in categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+        <select @bind="metaData.SubcategoryId">
+            <option value="0">Select Subcategory</option>
+            @foreach (Subcategory subcategory in subcategories)
+            {
+                <option value="@subcategory.Id">@subcategory.Name</option>
+            }
+        </select>
+    </div>
+    <div>
+        <select @bind="metaData.BrandId">
+            <option value="0">Select Brand</option>
+            @foreach (Brand brand in brands)
+            {
+                <option value="@brand.Id">@brand.Name</option>
+            }
+        </select>
+        <select @bind="metaData.Status">
+            @foreach (var status in Enum.GetValues<ProductStatuses>())
+            {
+                <option value="@status">@status</option>
+            }
+        </select>
+    </div>
+</div>
+</details>
+<details open>
+    <summary>Configuration & Inventory</summary>
+<div class="product-configuration">
+    <lable><input type="number" placeholder="In Stock" @bind="inventory.InStock" /></lable>
+    <lable><input type="number" placeholder="Weight" @bind="configuration.Weight" /></lable>
+    <lable><input type="checkbox" @bind="configuration.IsRental" />Rental</lable>
+    <lable><input type="checkbox" @bind="configuration.IsRequestQouote" />Request qoute</lable>
+    <lable><input type="checkbox" @bind="configuration.IsReturnable" />Returnable</lable>
+</div>
+</details>
+<details open>
+    <summary>SEO (Search Engine Optimization)</summary>
+<div class="product-seo">
+    <input type="text" placeholder="Meta Keywords" @bind="metaData.MetaKeywords" />
+    <input type="text" placeholder="Description" @bind="metaData.MetaDescription" />
+    <input type="text" placeholder="Meta Title" @bind=metaData.MetaTitle" />
+    <input type="text" placeholder="Search Engine friendly page name" @bind="metaData.SearchEngineFriendlyPageName" />
+</div>
+</details>
+@code {
+    private Configuration configuration = new();
+    private Inventory inventory = new();
+    private MetaData metaData = new();
+    private Product product = new();
+
+    private List<Department> departments = new();
+    private List<Category> categories = new();
+    private List<Subcategory> subcategories = new();
+    private List<Brand> brands = new();
+}

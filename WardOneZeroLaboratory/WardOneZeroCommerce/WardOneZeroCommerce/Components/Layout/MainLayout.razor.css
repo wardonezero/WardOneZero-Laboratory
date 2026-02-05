@@ -109,7 +109,7 @@ footer {
     min-height: 270px;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items:center;
     justify-content: center;
     gap: 2rem;
 }

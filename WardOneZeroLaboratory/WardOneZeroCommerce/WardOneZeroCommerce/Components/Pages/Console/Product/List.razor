@@ -1,0 +1,43 @@
+﻿@page "/console/products"
+@using WardOneZeroCommerce.Models.Console
+<div class="">
+    <h1>Products</h1>
+    <button type="button" class="add-new">AddNew</button>
+    <button type="button" class="delete">Delete (selected)</button>
+</div>
+<div class="search"></div>
+<table>
+    <thead>
+        <tr>
+            <th>Check Box</th>
+            <th>Picture</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>In Stock</th>
+            <th>Published</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ProductTableModel product in products)
+        {
+            <tr>
+                <td><input type="checkbox" /></td>
+                <td><img src="" alt="@product.Name" width="50" height="50" /></td>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td>@product.InStock</td>
+                <td>@product.Published</td>
+                <td>
+                    <button class="edit">Edit</button>
+                    <button class="delete">Delete</button>
+                    <button class="preview">Preview</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<ProductTableModel> products = [];
+}

@@ -1,98 +1,142 @@
 ﻿@page "/console/product/create"
-@rendermode InteractiveServer
 @layout ConsoleLayout
+@rendermode InteractiveServer
+@inject GenericDataService<ProductContext> productService
+@inject GenericDataService<CatalogContext> catalogService
+@inject NavigationManager Navigation
 @using DataFormulaLibrary.Models.Product
+@using WardOneZeroCommerce.Models.Console
 <div class="console-actions">
     <h2>Create product</h2>
-    <button type="button">Save</button>
-    <button type="button">Save and Continue Edit</button>
+    <button type="submit" form="create-product" @onclick="() => continueEditing = false">Save</button>
+    <button type="submit" form="create-product" @onclick="() => continueEditing = true">Save and Continue Edit</button>
 </div>
-<details open>
-    <summary>Product Information</summary>
-<div class="product-info">
-    <div>
-        <input type="text" placeholder="Name" @bind="product.Name" />
-        <input type="text" placeholder="Description" @bind="product.Description" />
-        <input type="text" placeholder="Short description" @bind="product.ShortDescription" />
-    </div>
-    <div>
-        <input type="number" placeholder="Cost" @bind="product.Cost" />
-        <input type="number" placeholder="Price" @bind="product.Price" />
-        <input type="number" placeholder="Discount" @bind="product.Discount" />
-    </div>
-</div>
+<EditForm id="create-product" OnValidSubmit="CreateProduct">
+    <DataAnnotationsValidator />
+    <details open>
+        <summary>Product Information</summary>
+        <div class="product-info">
+            <div>
+                <input type="text" placeholder="Name" @bind="product.Name" />
+                <ValidationMessage For="@(() => product.Name)" />
+                <input type="text" placeholder="Description" @bind="product.Description" />
+                <ValidationMessage For="@(() => product.Description)" />
+                <input type="text" placeholder="Short description" @bind="product.ShortDescription" />
+                <ValidationMessage For="@(() => product.ShortDescription)" />
+            </div>
+            <div>
+                <input type="number" placeholder="Cost" @bind="product.Cost" />
+                <ValidationMessage For="@(() => product.Cost)" />
+                <input type="number" placeholder="Price" @bind="product.Price" />
+                <ValidationMessage For="@(() => product.Price)" />
+                <input type="number" placeholder="Discount" @bind="product.Discount" />
+                <ValidationMessage For="@(() => product.Discount)" />
+            </div>
+        </div>
 
-</details>
-<details open>
-    <summary>Metadata & Categories</summary>
-<div class="product-metadata">
-    <div>
-        <select @bind="metaData.DepartmentId">
-            <option value="0">Select Department</option>
-            @foreach (Department department in departments)
-            {
-                <option value="@department.Id">@department.Name</option>
-            }
-        </select>
-        <select @bind="metaData.CategoryId">
-            <option value="0">Select Category</option>
-            @foreach (Category category in categories)
-            {
-                <option value="@category.Id">@category.Name</option>
-            }
-        </select>
-        <select @bind="metaData.SubcategoryId">
-            <option value="0">Select Subcategory</option>
-            @foreach (Subcategory subcategory in subcategories)
-            {
-                <option value="@subcategory.Id">@subcategory.Name</option>
-            }
-        </select>
-    </div>
-    <div>
-        <select @bind="metaData.BrandId">
-            <option value="0">Select Brand</option>
-            @foreach (Brand brand in brands)
-            {
-                <option value="@brand.Id">@brand.Name</option>
-            }
-        </select>
-        <select @bind="metaData.Status">
-            @foreach (var status in Enum.GetValues<ProductStatuses>())
-            {
-                <option value="@status">@status</option>
-            }
-        </select>
-    </div>
-</div>
-</details>
-<details open>
-    <summary>Configuration & Inventory</summary>
-<div class="product-configuration">
-    <lable><input type="number" placeholder="In Stock" @bind="inventory.InStock" /></lable>
-    <lable><input type="number" placeholder="Weight" @bind="configuration.Weight" /></lable>
-    <lable><input type="checkbox" @bind="configuration.IsRental" />Rental</lable>
-    <lable><input type="checkbox" @bind="configuration.IsRequestQouote" />Request qoute</lable>
-    <lable><input type="checkbox" @bind="configuration.IsReturnable" />Returnable</lable>
-</div>
-</details>
-<details open>
-    <summary>SEO (Search Engine Optimization)</summary>
-<div class="product-seo">
-    <input type="text" placeholder="Meta Keywords" @bind="metaData.MetaKeywords" />
-    <input type="text" placeholder="Description" @bind="metaData.MetaDescription" />
-    <input type="text" placeholder="Meta Title" @bind="metaData.MetaTitle" />
-    <input type="text" placeholder="Search Engine friendly page name" @bind="metaData.SearchEngineFriendlyPageName" />
-</div>
-</details>
+    </details>
+    <details open>
+        <summary>Metadata & Categories</summary>
+        <div class="product-metadata">
+            <div>
+                <select @bind="metaData.DepartmentId">
+                    <option value="0">Select Department</option>
+                    @foreach (Department department in departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                </select>
+                <ValidationMessage For="@(() => metaData.DepartmentId)" />
+                <select @bind="metaData.CategoryId">
+                    <option value="0">Select Category</option>
+                    @foreach (Category category in categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+                <ValidationMessage For="@(() => metaData.CategoryId)" />
+                <select @bind="metaData.SubcategoryId">
+                    <option value="0">Select Subcategory</option>
+                    @foreach (Subcategory subcategory in subcategories)
+                    {
+                        <option value="@subcategory.Id">@subcategory.Name</option>
+                    }
+                </select>
+                <ValidationMessage For="@(() => metaData.SubcategoryId)" />
+                <select @bind="metaData.BrandId">
+                    <option value="0">Select Brand</option>
+                    @foreach (Brand brand in brands)
+                    {
+                        <option value="@brand.Id">@brand.Name</option>
+                    }
+                </select>
+                <ValidationMessage For="@(() => metaData.BrandId)" />
+            </div>
+        </div>
+    </details>
+    <details open>
+        <summary>Configuration & Inventory</summary>
+        <div class="product-configuration">
+            <lable><input type="number" placeholder="In Stock" @bind="inventory.InStock" /></lable>
+            <ValidationMessage For="@(() => inventory.InStock)" />
+            <lable><input type="number" placeholder="Weight" @bind="configuration.Weight" /></lable>
+            <ValidationMessage For="@(() => configuration.Weight)" />
+            <lable><input type="checkbox" @bind="configuration.IsRental" />Rental</lable>
+            <lable><input type="checkbox" @bind="configuration.IsRequestQouote" />Request qoute</lable>
+            <lable><input type="checkbox" @bind="configuration.IsReturnable" />Returnable</lable>
+        </div>
+    </details>
+    <details open>
+        <summary>SEO (Search Engine Optimization)</summary>
+        <div class="product-seo">
+            <input type="text" placeholder="Meta Keywords" @bind="metaData.MetaKeywords" />
+            <ValidationMessage For="@(() => metaData.MetaKeywords)" />
+            <input type="text" placeholder="Description" @bind="metaData.MetaDescription" />
+            <ValidationMessage For="@(() => metaData.MetaDescription)" />
+            <input type="text" placeholder="Meta Title" @bind="metaData.MetaTitle" />
+            <ValidationMessage For="@(() => metaData.MetaTitle)" />
+            <input type="text" placeholder="Search Engine friendly page name" @bind="metaData.SearchEngineFriendlyPageName" />
+            <ValidationMessage For="@(() => metaData.SearchEngineFriendlyPageName)" />
+        </div>
+    </details>
+</EditForm>
+
 @code {
     private Configuration configuration = new();
     private Inventory inventory = new();
     private MetaData metaData = new();
     private Product product = new();
 
+    private byte departmentPage = 1;
     private List<Department> departments = new();
+    private byte categoryPage = 1;
     private List<Category> categories = new();
+    private byte subcategoryPage = 1;
     private List<Subcategory> subcategories = new();
+    private byte brandPage = 1;
     private List<Brand> brands = new();
+
+    private bool continueEditing = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        departments.AddRange(await catalogService.GetPagedAsync<Department>(departmentPage, 100));
+        categories.AddRange(await catalogService.GetPagedAsync<Category>(categoryPage, 100));
+        subcategories.AddRange(await catalogService.GetPagedAsync<Subcategory>(subcategoryPage, 100));
+        brands.AddRange(await catalogService.GetPagedAsync<Brand>(brandPage, 100));
+    }
+
+    private async Task CreateProduct()
+    {
+        metaData.Status = ProductStatuses.Draft;
+        await productService.CreateAsync(configuration);
+        await productService.CreateAsync(inventory);
+        await productService.CreateAsync(metaData);
+        await productService.CreateAsync(product);
+
+        if (continueEditing)
+            Navigation.NavigateTo($"/console/product/{product.Id}");
+        else
+            Navigation.NavigateTo("/console/products");
+    }
 }

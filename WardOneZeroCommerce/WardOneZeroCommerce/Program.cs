@@ -1,3 +1,6 @@
+using DataFormulaLibrary.Data;
+using Microsoft.EntityFrameworkCore;
+using ServiceFormulaLibrary;
 using WardOneZeroCommerce.Components;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -6,6 +9,19 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+string connectionString = builder.Configuration.GetConnectionString("Sqlite")!;
+
+builder.Services.AddDbContext<DataContext>(option => option.UseSqlite(connectionString));
+builder.Services.AddDbContext<AddressContext>(o => o.UseSqlite(connectionString));
+builder.Services.AddDbContext<AttributeContext>(o => o.UseSqlite(connectionString));
+builder.Services.AddDbContext<CatalogContext>(o => o.UseSqlite(connectionString));
+builder.Services.AddDbContext<ProductContext>(o => o.UseSqlite(connectionString));
+builder.Services.AddDbContext<SalesContext>(o => o.UseSqlite(connectionString));
+builder.Services.AddDbContext<UserContext>(o => o.UseSqlite(connectionString));
+
+builder.Services.AddScoped(typeof(GenericDataService<>));
+builder.Services.AddScoped(typeof(PictureService<>));
 
 WebApplication app = builder.Build();
 

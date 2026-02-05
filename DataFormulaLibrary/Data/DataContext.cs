@@ -28,11 +28,11 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<Color> Colors { get; set; }
     public DbSet<Dimention> Dimentions { get; set; }
     public DbSet<Size> Sizes { get; set; }
-    public DbSet<Configuration> Configurations { get; set; }
-    public DbSet<Inventory> Inventories { get; set; }
+    public DbSet<Configuration> ProductsConfigurations { get; set; }
+    public DbSet<Inventory> ProductsInventories { get; set; }
     public DbSet<Models.Product.MetaData> ProductsMetaDatas { get; set; }
     public DbSet<Models.Product.Product> Products { get; set; }
-    public DbSet<Models.Product.Review> Reviews { get; set; }
+    public DbSet<Models.Product.Review> ProductsReviews { get; set; }
     public DbSet<Picture> ProductsPictures => Set<Picture>("ProductsPictures");
     public DbSet<Picture> ProfilesPictures => Set<Picture>("ProfilesPictures");
     public DbSet<ProductItem> ProductItems { get; set; }

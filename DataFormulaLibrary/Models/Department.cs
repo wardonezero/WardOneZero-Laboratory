@@ -1,6 +1,8 @@
-﻿namespace DataFormulaLibrary.Models;
+﻿using DataFormulaLibrary.Interfaces;
 
-public class Department
+namespace DataFormulaLibrary.Models;
+
+public class Department : ICatalogItem
 {
     public int Id { get; set; } = 0;
     public string Name { get; set; } = string.Empty;

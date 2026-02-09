@@ -1,6 +1,8 @@
-﻿namespace DataFormulaLibrary.Models;
+﻿using DataFormulaLibrary.Interfaces;
 
-public class Subcategory
+namespace DataFormulaLibrary.Models;
+
+public class Subcategory : ICatalogItem
 {
     public int Id { get; set; } = 0;
     public int CategoryId { get; set; } = 0;

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataFormulaLibrary.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace ServiceFormulaLibrary;
 
@@ -17,11 +18,17 @@ public class GenericDataService<TContext>(TContext context) where TContext : DbC
             .ToListAsync();
     }
 
-    public async Task<List<TEntity>> GetManyAsync<TEntity>(List<int> ids) where TEntity : class
+    public async Task<List<ItemIdNameViewModel>> GetItemIdNameOnlyPagedAsync<TEntity>(int page = 1, byte size = 100) where TEntity : class
     {
-        return await context.Set<TEntity>().AsNoTracking()
-            .Where(e => ids.Contains(EF.Property<int>(e, "Id")))
-            .ToListAsync();
+        List<ItemIdNameViewModel> items = await context.Set<TEntity>().AsNoTracking()
+            .Select(e => new ItemIdNameViewModel
+            {
+                Id = EF.Property<int>(e, "Id"),
+                Name = EF.Property<string>(e, "Name") ?? string.Empty
+            })
+            .Skip((page - 1) * size).Take(size).ToListAsync();
+        return items;
+
     }
 
     public async Task<TEntity?> GetAsync<TEntity>(int id) where TEntity : class

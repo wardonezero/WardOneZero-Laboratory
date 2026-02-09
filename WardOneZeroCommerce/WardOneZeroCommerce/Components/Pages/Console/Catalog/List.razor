@@ -1,0 +1,139 @@
+﻿@page "/console/catalogs/"
+@layout ConsoleLayout
+@rendermode InteractiveServer
+@inject GenericDataService<CatalogContext> catalogService
+<div class="search"></div>
+<div class="console-tabs">
+    <div class="tabs">
+        <button class="@GetTabClass(Tab.Departments)" @onclick="() => SwitchTab(Tab.Departments)">Departments</button>
+        <button class="@GetTabClass(Tab.Categories)" @onclick="() => SwitchTab(Tab.Categories)">Categories</button>
+        <button class="@GetTabClass(Tab.Subcategories)" @onclick="() => SwitchTab(Tab.Subcategories)">Subcategories</button>
+        <button class="@GetTabClass(Tab.Brands)" @onclick="() => SwitchTab(Tab.Brands)">Brands</button>
+    </div>
+</div>
+
+@switch (activeTab)
+{
+    case Tab.Departments:
+        <CreateOrEditComponent TValue="Department" model="department" IsEdit="isEditing" OnCancel="ResetCreateOrEdit" OnSaved="LoadCurrentTabAsync" />
+        @RenderTable(departments, EditDepartment)
+        break;
+    case Tab.Categories:
+        <CreateOrEditComponent TValue="Category" model="category" IsEdit="isEditing" OnCancel="ResetCreateOrEdit" OnSaved="LoadCurrentTabAsync" />
+        @RenderTable(categories, EditCategory)
+        break;
+    case Tab.Subcategories:
+        <CreateOrEditComponent TValue="Subcategory" model="subcategory" IsEdit="isEditing" OnCancel="ResetCreateOrEdit" OnSaved="LoadCurrentTabAsync" />
+        @RenderTable(subcategories, EditSubcategory)
+        break;
+    case Tab.Brands:
+        <CreateOrEditComponent TValue="Brand" model="brand" IsEdit="isEditing" OnCancel="ResetCreateOrEdit" OnSaved="LoadCurrentTabAsync" />
+        @RenderTable(brands, EditBrand)
+        break;
+}
+
+@code {
+    private enum Tab { Departments, Categories, Subcategories, Brands }
+    private Tab activeTab = Tab.Departments;
+    private bool isEditing = false;
+
+    private int brandPage = 1;
+    private List<Brand>? brands;
+    private int departmentPage = 1;
+    private List<Department>? departments;
+    private int categoryPage = 1;
+    private List<Category>? categories;
+    private int subcategoryPage = 1;
+    private List<Subcategory>? subcategories;
+
+    private Brand brand = new();
+    private Department department = new();
+    private Category category = new();
+    private Subcategory subcategory = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCurrentTabAsync();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task SwitchTab(Tab tab)
+    {
+        activeTab = tab;
+        ResetCreateOrEdit();
+        await LoadCurrentTabAsync();
+    }
+
+    private void ResetCreateOrEdit()
+    {
+        isEditing = false;
+        brand = new();
+        department = new();
+        category = new();
+        subcategory = new();
+        StateHasChanged();
+    }
+
+    private string GetTabClass(Tab tab) => activeTab == tab ? "active" : "";
+
+    private async Task LoadCurrentTabAsync()
+    {
+        ResetCreateOrEdit();
+        switch (activeTab)
+        {
+            case Tab.Departments:
+                if (departments == null) departments = await catalogService.GetPagedAsync<Department>(departmentPage);
+                break;
+            case Tab.Categories:
+                if (categories == null) categories = await catalogService.GetPagedAsync<Category>(categoryPage);
+                break;
+            case Tab.Subcategories:
+                if (subcategories == null) subcategories = await catalogService.GetPagedAsync<Subcategory>(subcategoryPage);
+                break;
+            case Tab.Brands:
+                if (brands == null) brands = await catalogService.GetPagedAsync<Brand>(brandPage);
+                break;
+        }
+        StateHasChanged();
+    }
+
+    private void EditBrand(Brand item) { brand = item; isEditing = true; StateHasChanged(); }
+    private void EditDepartment(Department item) { department = item; isEditing = true; StateHasChanged(); }
+    private void EditCategory(Category item) { category = item; isEditing = true; StateHasChanged(); }
+    private void EditSubcategory(Subcategory item) { subcategory = item; isEditing = true; StateHasChanged(); }
+
+
+    private RenderFragment RenderTable<T>(List<T>? items, Action<T> onEdit) where T : ICatalogItem => __builder =>
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Check Box</th>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Published</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (items != null)
+                {
+                    foreach (var item in items)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>@item.Name</td>
+                            <td>@item.Description</td>
+                            <td>@item.Published</td>
+                            <td>
+                                <button type="button" class="edit" @onclick="() => onEdit(item)">Edit</button>
+                                <button type="button" class="delete">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    };
+}

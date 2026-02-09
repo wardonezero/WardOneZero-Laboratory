@@ -35,6 +35,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<Models.Product.Review> ProductsReviews { get; set; }
     public DbSet<Picture> ProductsPictures => Set<Picture>("ProductsPictures");
     public DbSet<Picture> ProfilesPictures => Set<Picture>("ProfilesPictures");
+    public DbSet<Picture> BrandsPictures => Set<Picture>("BrandsPictures");
     public DbSet<ProductItem> ProductItems { get; set; }
     public DbSet<Shipment> Shipments { get; set; }
     public DbSet<Models.Shipping.ShipmentItem> ShipmentsItems { get; set; }
@@ -55,6 +56,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         modelBuilder.SharedTypeEntity<Picture>("ProductsPictures");
         modelBuilder.SharedTypeEntity<Picture>("ProfilesPictures");
+        modelBuilder.SharedTypeEntity<Picture>("BrandsPictures");
         modelBuilder.Ignore<Picture>();
     }
 }

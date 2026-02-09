@@ -1,6 +1,8 @@
-﻿namespace DataFormulaLibrary.Models;
+﻿using DataFormulaLibrary.Interfaces;
 
-public class Brand
+namespace DataFormulaLibrary.Models;
+
+public class Brand : ICatalogItem
 {
     public int Id { get; set; } = 0;
     public string Name { get; set; } = string.Empty;

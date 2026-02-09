@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /DataFormulaLibrary/Migrations
 /WardOneZeroCommerce.db
+/WardOneZeroCommerce.db-shm
+/WardOneZeroCommerce.db-wal

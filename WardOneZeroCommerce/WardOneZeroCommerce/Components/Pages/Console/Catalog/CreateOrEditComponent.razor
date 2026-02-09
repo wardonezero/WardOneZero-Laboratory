@@ -1,0 +1,130 @@
+﻿@typeparam TValue where TValue : class, ICatalogItem
+@inject GenericDataService<CatalogContext> catalogService
+@using System.Linq.Expressions
+@if (model is not null)
+{
+    <div class="console-actions">
+        <h2>@(IsEdit ? "Edit" : "Create") @typeof(TValue).Name </h2>
+        <button type="submit" form="create-edit-catalog-value" @onclick="() => continueEditing = false">Save</button>
+        <button type="submit" form="create-edit-catalog-value" @onclick="() => continueEditing = true">Save and Continue Edit</button>
+        <button type="button" @onclick="CancelCreateOrEdit">Cancel</button>
+    </div>
+    <EditForm id="create-edit-catalog-value" Model="model" OnValidSubmit="CreateOrEditCatalogValue">
+        <div class="catalog-value-left">
+            <input type="text" placeholder="Name" @bind="model.Name" />
+            <ValidationMessage For="@(() => model.Name)" />
+            <input type="text" placeholder="Description" @bind="model.Description" />
+            <ValidationMessage For="@(() => model.Description)" />
+            <input type="text" placeholder="Comment" @bind="model.Comment" />
+            <ValidationMessage For="@(() => model.Comment)" />
+        </div>
+        <div class="catalog-value-right">
+            @if (isparentSelectable && items is not null)
+            {
+                <select @bind="ParentId">
+                    <option value="0">Select @parentLable</option>
+                    @foreach (ItemIdNameViewModel item in items)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+                @if (ParentIdValidationExpression is not null)
+                {
+                    <ValidationMessage For="@ParentIdValidationExpression" />
+                }
+            }
+            <lable><input type="checkbox" @bind="model.Published" />Published</lable>
+
+            <ValidationMessage For="@(() => model.Published)" />
+            @if (model is Brand brand)
+            {
+
+            }
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public TValue? model { get; set; }
+    [Parameter] public bool IsEdit { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback OnSaved { get; set; }
+
+    private bool continueEditing = false;
+
+    private byte itemsPage = 1;
+    private List<ItemIdNameViewModel>? items;
+
+    private bool isparentSelectable => model is Category || model is Subcategory;
+
+    private string parentLable => model switch
+    {
+        Category => "Department",
+        Subcategory => "Category",
+        Brand => "Brand",
+        Department => "Department",
+        _ => string.Empty
+    };
+
+    private int ParentId
+    {
+        get
+        {
+            if (model is Category c) return c.DepartmentId;
+            if (model is Subcategory s) return s.CategoryId;
+            return 0;
+        }
+        set
+        {
+            if (model is Category c) c.DepartmentId = value;
+            if (model is Subcategory s) s.CategoryId = value;
+        }
+    }
+
+    private Expression<Func<int>>? ParentIdValidationExpression
+    {
+        get
+        {
+            if (model is Category) return () => ((Category)(object)model!).DepartmentId;
+            if (model is Subcategory) return () => ((Subcategory)(object)model!).CategoryId;
+            return null;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (model is Category)
+            items = await catalogService.GetItemIdNameOnlyPagedAsync<Department>();
+        else if (model is Subcategory)
+            items = await catalogService.GetItemIdNameOnlyPagedAsync<Category>();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task CreateOrEditCatalogValue()
+    {
+        if (model == null) return;
+        if(IsEdit || model.Id > 0)
+            await catalogService.EditAsync(model);
+        else
+        {            
+            int newId = await catalogService.CreateAsync(model);
+            if (continueEditing)
+            {
+                model.Id = newId;
+                IsEdit = true;
+            }
+        }
+        if (OnSaved.HasDelegate)
+            await OnSaved.InvokeAsync();
+
+        if (!continueEditing)
+            await CancelCreateOrEdit();
+
+    }
+
+    private async Task CancelCreateOrEdit()
+    {
+        if (OnCancel.HasDelegate)
+            await OnCancel.InvokeAsync();
+    }
+}

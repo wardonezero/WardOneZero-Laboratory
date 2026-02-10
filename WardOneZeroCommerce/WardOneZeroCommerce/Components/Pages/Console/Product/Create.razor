@@ -105,22 +105,22 @@
     private ValidationMessageStore? messageStore;
 
     private byte departmentPage = 1;
-    private List<Department> departments = new();
+    private List<ItemIdNameViewModel> departments = new();
     private byte categoryPage = 1;
-    private List<Category> categories = new();
+    private List<ItemIdNameViewModel> categories = new();
     private byte subcategoryPage = 1;
-    private List<Subcategory> subcategories = new();
+    private List<ItemIdNameViewModel> subcategories = new();
     private byte brandPage = 1;
-    private List<Brand> brands = new();
+    private List<ItemIdNameViewModel> brands = new();
 
     private bool continueEditing = false;
 
     protected override async Task OnInitializedAsync()
     {
-        departments.AddRange(await catalogService.GetPagedAsync<Department>(departmentPage, 100));
-        categories.AddRange(await catalogService.GetPagedAsync<Category>(categoryPage, 100));
-        subcategories.AddRange(await catalogService.GetPagedAsync<Subcategory>(subcategoryPage, 100));
-        brands.AddRange(await catalogService.GetPagedAsync<Brand>(brandPage, 100));
+        departments.AddRange(await catalogService.GetItemIdNameOnlyPagedAsync<Department>(departmentPage, 100));
+        categories.AddRange(await catalogService.GetItemIdNameOnlyPagedAsync<Category>(categoryPage, 100));
+        subcategories.AddRange(await catalogService.GetItemIdNameOnlyPagedAsync<Subcategory>(subcategoryPage, 100));
+        brands.AddRange(await catalogService.GetItemIdNameOnlyPagedAsync<Brand>(brandPage, 100));
     }
 
     private async Task CreateProduct(EditContext context)

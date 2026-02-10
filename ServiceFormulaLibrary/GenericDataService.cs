@@ -5,12 +5,6 @@ namespace ServiceFormulaLibrary;
 
 public class GenericDataService<TContext>(TContext context) where TContext : DbContext
 {
-    public async Task<List<TEntity>> GetLimitedAsync<TEntity>(byte limit = 100) where TEntity : class
-    {
-        return await context.Set<TEntity>().AsNoTracking()
-            .Take(limit).ToListAsync();
-    }
-
     public async Task<List<TEntity>> GetPagedAsync<TEntity>(int page = 1, byte size = 20) where TEntity : class
     {
         return await context.Set<TEntity>().AsNoTracking()

@@ -8,6 +8,7 @@ public class GenericDataService<TContext>(TContext context) where TContext : DbC
     public async Task<List<TEntity>> GetPagedAsync<TEntity>(int page = 1, byte size = 20) where TEntity : class
     {
         return await context.Set<TEntity>().AsNoTracking()
+            .OrderBy(e => EF.Property<int>(e, "Id"))
             .Skip((page - 1) * size).Take(size)
             .ToListAsync();
     }
@@ -20,6 +21,7 @@ public class GenericDataService<TContext>(TContext context) where TContext : DbC
                 Id = EF.Property<int>(e, "Id"),
                 Name = EF.Property<string>(e, "Name") ?? string.Empty
             })
+            .OrderBy(e => e.Id)
             .Skip((page - 1) * size).Take(size).ToListAsync();
         return items;
 

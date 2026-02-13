@@ -1,4 +1,5 @@
-﻿using DataFormulaLibrary.Models.Shared.Properties;
+﻿using DataFormulaLibrary.Models.Product;
+using DataFormulaLibrary.Models.Shared.Properties;
 using Microsoft.EntityFrameworkCore;
 
 namespace ServiceFormulaLibrary;
@@ -15,6 +16,87 @@ namespace ServiceFormulaLibrary;
 /// <param name="context">The database context instance used to perform operations on the picture data. Cannot be null.</param>
 public class PictureService<TContext>(TContext context) where TContext : DbContext
 {
+    public async Task<bool> AddOrRemoveProductPictureAsync(int productId, int pictureId, bool remove = false)
+    {
+        Inventory? inventory = await context.Set<Inventory>()
+            .FirstOrDefaultAsync(i => i.Id == productId);
+
+        if (inventory is not null)
+        {
+            if (!inventory.PicturesIds.Contains(pictureId) && !remove)
+                inventory.PicturesIds.Add(pictureId);
+            if (inventory.PicturesIds.Contains(pictureId) && remove)
+                inventory.PicturesIds.Remove(pictureId);
+            await context.SaveChangesAsync();
+            context.Entry(inventory).State = EntityState.Detached;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public async Task<List<Picture>> GetProductPicturesAsync(int productId, string tableName)
+    {
+        List<int>? pictureIds = await context.Set<Inventory>().AsNoTracking()
+            .Where(i => i.Id == productId)
+            .Select(i => i.PicturesIds).FirstOrDefaultAsync();
+        return pictureIds is null ? []
+            : await GetPicturesAsync(pictureIds, tableName);
+    }
+
+    /// <summary>
+    /// Asynchronously retrieves a list of pictures from the specified table that match the provided identifiers.
+    /// </summary>
+    /// <remarks>The query is executed without tracking the returned entities, which can improve performance
+    /// when the entities are not modified.</remarks>
+    /// <param name="ids">An enumerable collection of picture identifiers to retrieve. Must not be empty.</param>
+    /// <param name="tableName">The name of the database table from which to retrieve the pictures. This value must correspond to a valid table
+    /// in the database context.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="Picture"/>
+    /// objects that match the specified identifiers. The list is empty if no matching pictures are found.</returns>
+    public async Task<List<Picture>> GetPicturesAsync(List<int> ids, string tableName)
+    {
+
+        string idsList = string.Join(", ", ids);
+        string query = $"SELECT * FROM \"{tableName}\" WHERE \"Id\" IN ({idsList}) ORDER BY \"DisplayOrder\"";
+
+        List<Picture> pictures = await context.Set<Picture>(tableName)
+            .FromSqlRaw(query)
+            .AsNoTracking()
+            .ToListAsync();
+
+        return pictures;
+    }
+
+    /// <summary>
+    /// Asynchronously retrieves a picture with the specified identifier from the given database table.
+    /// </summary>
+    /// <remarks>The returned picture is not tracked by the context. This method is suitable for read-only
+    /// scenarios.</remarks>
+    /// <param name="pictureId">The unique identifier of the picture to retrieve.</param>
+    /// <param name="tableName">The name of the database table containing the picture. Cannot be null or empty.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the <see cref="Picture"/> if found;
+    /// otherwise, <see langword="null"/>.</returns>
+    public async Task<Picture?> GetPictureAsync(int pictureId, string tableName)
+    {
+        return await context.Set<Picture>(tableName).AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == pictureId);
+    }
+
+    public async Task<bool> DeletePictureAsync(int pictureId, string tableName)
+    {
+        try
+        {
+            int affectedRows = await context.Set<Picture>(tableName)
+                .Where(p => p.Id == pictureId).ExecuteDeleteAsync();
+            return affectedRows > 0 && affectedRows < 2; ;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     /// <summary>
     /// Asynchronously saves a picture to the specified database table and returns the unique identifier of the saved
     /// picture.
@@ -26,7 +108,7 @@ public class PictureService<TContext>(TContext context) where TContext : DbConte
     /// <param name="tableName">The name of the database table in which to store the picture. Cannot be null or empty.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the unique identifier of the saved
     /// picture.</returns>
-    public async Task<int> SavePictureAsync(Stream inputPicture, string extention, byte displayOrder, string tableName)
+    public async Task<int> SavePictureAsync(Stream inputPicture, string extention, byte displayOrder, string title, string alt, string tableName)
     {
         byte[] binary;
         if (inputPicture.CanSeek)
@@ -46,26 +128,11 @@ public class PictureService<TContext>(TContext context) where TContext : DbConte
             binary = memoryStream.ToArray();
         }
 
-        Picture picture = new() { Extention = extention, Binary = binary, DisplayOrder = displayOrder };
+        Picture picture = new() { Extention = extention, Binary = binary, DisplayOrder = displayOrder, Title = title, Alt = alt };
 
         context.Set<Picture>(tableName).Add(picture);
         await context.SaveChangesAsync();
         context.Entry(picture).State = EntityState.Detached;
         return picture.Id;
-    }
-
-    /// <summary>
-    /// Asynchronously retrieves a picture with the specified identifier from the given database table.
-    /// </summary>
-    /// <remarks>The returned picture is not tracked by the context. This method is suitable for read-only
-    /// scenarios.</remarks>
-    /// <param name="pictureId">The unique identifier of the picture to retrieve.</param>
-    /// <param name="tableName">The name of the database table containing the picture. Cannot be null or empty.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains the <see cref="Picture"/> if found;
-    /// otherwise, <see langword="null"/>.</returns>
-    public async Task<Picture?> GetPictureAsync(int pictureId, string tableName)
-    {
-        return await context.Set<Picture>(tableName).AsNoTracking()
-            .FirstOrDefaultAsync(p => p.Id == pictureId);
     }
 }

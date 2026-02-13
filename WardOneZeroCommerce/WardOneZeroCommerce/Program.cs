@@ -16,12 +16,12 @@ builder.Services.AddDbContext<DataContext>(option => option.UseSqlite(connection
 builder.Services.AddDbContext<AddressContext>(o => o.UseSqlite(connectionString));
 builder.Services.AddDbContext<AttributeContext>(o => o.UseSqlite(connectionString));
 builder.Services.AddDbContext<CatalogContext>(o => o.UseSqlite(connectionString));
-builder.Services.AddDbContext<ProductContext>(o => o.UseSqlite(connectionString));
 builder.Services.AddDbContext<SalesContext>(o => o.UseSqlite(connectionString));
 builder.Services.AddDbContext<UserContext>(o => o.UseSqlite(connectionString));
 
 builder.Services.AddScoped(typeof(GenericDataService<>));
 builder.Services.AddScoped(typeof(PictureService<>));
+builder.Services.AddScoped<ProductService>();
 
 WebApplication app = builder.Build();
 

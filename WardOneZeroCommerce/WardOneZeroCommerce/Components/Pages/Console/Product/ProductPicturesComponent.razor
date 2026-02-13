@@ -1,0 +1,97 @@
+﻿@rendermode InteractiveServer
+@inject PictureService<CatalogContext> pictureService
+@using DataFormulaLibrary.Models.Shared.Properties
+<div class="picture-add">
+    <EditForm Model="@newPicture" OnValidSubmit="HandleSubmit" FormName="AddPictureForm">
+        <DataAnnotationsValidator />
+        <button type="submit" disabled="@(selectedFile == null)">Save Picture</button>
+        <div>
+            <label>Picture File:</label>
+            <InputFile OnChange="HandleFileSelected" />
+        </div>
+        <div>
+            <label>Title:</label>
+            <InputText @bind-Value="newPicture.Title" placeholder="Image Title" />
+        </div>
+        <div>
+            <label>Alt Text:</label>
+            <InputText @bind-Value="newPicture.Alt" placeholder="Alt Text" />
+        </div>
+        <div>
+            <label>Display Order:</label>
+            <input type="number" min="0" max="255" @bind="newPicture.DisplayOrder" />
+        </div>
+    </EditForm>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>Picture</th>
+            <th>Display order</th>
+            <th>Title</th>
+            <th>Alt</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Picture picture in pictures)
+        {
+            <tr>
+                <td><input type="checkbox" /></td>
+                <td><img src="" title="@picture.Title" alt="@picture.Alt" width="50" height="50" /></td>
+                <td>@picture.DisplayOrder</td>
+                <td>@picture.Title</td>
+                <td>@picture.Alt</td>
+                <td>
+                    <button type="button" class="edit">Edit</button>
+                    <button type="button" class="delete" @onclick="() => DeletePicture(picture.Id)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter] public int ProductId { get; set; }
+    private List<Picture> pictures = [];
+    private Picture newPicture = new();
+    private IBrowserFile? selectedFile;
+    private const string tableName = "ProductsPictures";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProductPictures();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadProductPictures()
+    {
+        pictures = await pictureService.GetProductPicturesAsync(ProductId, CatalogContext.ProductPicturesTableName);
+        StateHasChanged();
+    }
+
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        newPicture.Extention = Path.GetExtension(e.File.Name);
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (selectedFile != null)
+        {
+            using var stream = selectedFile.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024);
+            await pictureService.SavePictureAsync(stream, newPicture.Extention, newPicture.DisplayOrder, newPicture.Title, newPicture.Alt, tableName);
+            await pictureService.AddOrRemoveProductPictureAsync(ProductId, newPicture.Id);
+            newPicture = new();
+            selectedFile = null;
+            await LoadProductPictures();
+        }
+    }
+
+    private async Task DeletePicture(int pictureId)
+    {
+        await pictureService.DeletePictureAsync(pictureId, tableName);
+        await pictureService.AddOrRemoveProductPictureAsync(ProductId, pictureId, true);
+    }
+}

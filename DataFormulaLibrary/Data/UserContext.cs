@@ -10,7 +10,9 @@ public class UserContext(DbContextOptions<UserContext> options) : DbContext(opti
     public DbSet<Cart> Carts { get; set; }
     public DbSet<WishList> WishLists { get; set; }
     public DbSet<WishListItem> WishListItems { get; set; }
-    public DbSet<Picture> ProfilesPictures => Set<Picture>("ProfilesPictures");
+
+    public const string PicturesTableName = "ProfilesPictures";
+    public DbSet<Picture> ProfilesPictures => Set<Picture>(PicturesTableName);
     public DbSet<User> Users { get; set; }
     public DbSet<Models.User.MetaData> UsersMetaData { get; set; }
 
@@ -18,7 +20,7 @@ public class UserContext(DbContextOptions<UserContext> options) : DbContext(opti
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.SharedTypeEntity<Picture>("ProfilesPictures");
+        modelBuilder.SharedTypeEntity<Picture>(PicturesTableName);
         modelBuilder.Ignore<Picture>();
     }
 }

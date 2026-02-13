@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Forms;
 using System.ComponentModel.DataAnnotations;
 
-namespace WardOneZeroCommerce.Models.Console;
+namespace DataFormulaLibrary.ViewModels;
 
 public class ProductFormViewModel
 {
@@ -10,6 +10,10 @@ public class ProductFormViewModel
     public Inventory Inventory { get; set; }
     public MetaData MetaData { get; set; }
     public Product Product { get; set; }
+    public string Department { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
+    public string Subcategory { get; set; } = string.Empty;
+    public string Brand { get; set; } = string.Empty;
 
     public ProductFormViewModel()
     {
@@ -18,6 +22,7 @@ public class ProductFormViewModel
         MetaData = new MetaData();
         Product = new Product();
     }
+
     public ProductFormViewModel(Configuration? configuration, Inventory? inventory, MetaData? metaData, Product? product)
     {
         if (configuration != null && inventory != null && metaData != null && product != null &&

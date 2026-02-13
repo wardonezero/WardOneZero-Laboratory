@@ -1,5 +1,6 @@
 ﻿@page "/console/products"
-@using WardOneZeroCommerce.Models.Console
+@layout ConsoleLayout
+@inject ProductService productService
 <div class="">
     <h1>Products</h1>
     <button type="button" class="add-new">AddNew</button>
@@ -19,7 +20,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (ProductTableModel product in products)
+        @foreach (ProductTableViewModel product in products)
         {
             <tr>
                 <td><input type="checkbox" /></td>
@@ -29,9 +30,9 @@
                 <td>@product.InStock</td>
                 <td>@product.Published</td>
                 <td>
-                    <button type="button" class="edit">Edit</button>
+                    <a href="/console/product/@product.Id" class="edit">Edit</a>
                     <button type="button" class="delete">Delete</button>
-                    <button type="button" class="preview">Preview</button>
+                    <a href="#" class="preview">Preview</a>
                 </td>
             </tr>
         }
@@ -39,5 +40,12 @@
 </table>
 
 @code {
-    private List<ProductTableModel> products = [];
+    private List<ProductTableViewModel> products = [];
+    private int productPage = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products.AddRange(await productService.GetPagedAsync(productPage));
+        await base.OnInitializedAsync();
+    }
 }

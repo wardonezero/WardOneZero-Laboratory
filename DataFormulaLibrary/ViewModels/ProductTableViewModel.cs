@@ -1,6 +1,6 @@
-﻿namespace WardOneZeroCommerce.Models.Console;
+﻿namespace DataFormulaLibrary.ViewModels;
 
-public class ProductTableModel
+public class ProductTableViewModel
 {
     public int Id { get; set; }
     public string PictureUrl { get; set; } = string.Empty;

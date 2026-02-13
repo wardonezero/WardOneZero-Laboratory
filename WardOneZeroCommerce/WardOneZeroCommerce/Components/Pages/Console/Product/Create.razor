@@ -1,17 +1,15 @@
 ﻿@page "/console/product/create"
 @layout ConsoleLayout
 @rendermode InteractiveServer
-@inject GenericDataService<ProductContext> productService
 @inject GenericDataService<CatalogContext> catalogService
 @inject NavigationManager Navigation
 @using DataFormulaLibrary.Models.Product
-@using WardOneZeroCommerce.Models.Console
 <div class="console-actions">
     <h2>Create product</h2>
     <button type="submit" form="create-product" @onclick="() => continueEditing = false">Save</button>
     <button type="submit" form="create-product" @onclick="() => continueEditing = true">Save and Continue Edit</button>
 </div>
-<EditForm id="create-product" Model="model" OnValidSubmit="CreateProduct">
+<EditForm id="create-product" Model="model" OnSubmit="CreateProduct">
     <details open>
         <summary>Product Information</summary>
         <div class="product-info">
@@ -129,10 +127,10 @@
         if (model.Validate(messageStore))
         {
             model.MetaData.Status = ProductStatuses.Draft;
-            await productService.CreateAsync(model.Configuration);
-            await productService.CreateAsync(model.Inventory);
-            await productService.CreateAsync(model.MetaData);
-            await productService.CreateAsync(model.Product);
+            await catalogService.CreateAsync(model.Configuration);
+            await catalogService.CreateAsync(model.Inventory);
+            await catalogService.CreateAsync(model.MetaData);
+            await catalogService.CreateAsync(model.Product);
 
             if (continueEditing)
                 Navigation.NavigateTo($"/console/product/{model.Product.Id}");

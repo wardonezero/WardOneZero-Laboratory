@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DataFormulaLibrary\DataFormulaLibrary.csproj" />
     <ProjectReference Include="..\..\ServiceFormulaLibrary\ServiceFormulaLibrary.csproj" />
   </ItemGroup>
 

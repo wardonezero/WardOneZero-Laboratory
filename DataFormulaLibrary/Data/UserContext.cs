@@ -7,12 +7,12 @@ namespace DataFormulaLibrary.Data;
 
 public class UserContext(DbContextOptions<UserContext> options) : DbContext(options)
 {
+    public const string ProfilesPicturesTableName = "ProfilesPictures";
+
     public DbSet<Cart> Carts { get; set; }
     public DbSet<WishList> WishLists { get; set; }
     public DbSet<WishListItem> WishListItems { get; set; }
-
-    public const string PicturesTableName = "ProfilesPictures";
-    public DbSet<Picture> ProfilesPictures => Set<Picture>(PicturesTableName);
+    public DbSet<Picture> ProfilesPictures => Set<Picture>(ProfilesPicturesTableName);
     public DbSet<User> Users { get; set; }
     public DbSet<Models.User.MetaData> UsersMetaData { get; set; }
 
@@ -20,7 +20,10 @@ public class UserContext(DbContextOptions<UserContext> options) : DbContext(opti
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.SharedTypeEntity<Picture>(PicturesTableName);
-        modelBuilder.Ignore<Picture>();
+        modelBuilder.SharedTypeEntity<Picture>(ProfilesPicturesTableName, entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.ToTable(ProfilesPicturesTableName);
+        });
     }
 }

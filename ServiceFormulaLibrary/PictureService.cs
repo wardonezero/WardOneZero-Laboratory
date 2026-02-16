@@ -27,6 +27,7 @@ public class PictureService<TContext>(TContext context) where TContext : DbConte
                 inventory.PicturesIds.Add(pictureId);
             if (inventory.PicturesIds.Contains(pictureId) && remove)
                 inventory.PicturesIds.Remove(pictureId);
+            context.Entry(inventory).Property(i => i.PicturesIds).IsModified = true;
             await context.SaveChangesAsync();
             context.Entry(inventory).State = EntityState.Detached;
             return true;
@@ -56,15 +57,12 @@ public class PictureService<TContext>(TContext context) where TContext : DbConte
     /// objects that match the specified identifiers. The list is empty if no matching pictures are found.</returns>
     public async Task<List<Picture>> GetPicturesAsync(List<int> ids, string tableName)
     {
-
-        string idsList = string.Join(", ", ids);
-        string query = $"SELECT * FROM \"{tableName}\" WHERE \"Id\" IN ({idsList}) ORDER BY \"DisplayOrder\"";
-
-        List<Picture> pictures = await context.Set<Picture>(tableName)
-            .FromSqlRaw(query)
+        List<Picture> pictures;
+        pictures = await context.Set<Picture>(tableName)
             .AsNoTracking()
+            .Where(p => ids.Contains(p.Id))
+            .OrderBy(p => p.DisplayOrder)
             .ToListAsync();
-
         return pictures;
     }
 

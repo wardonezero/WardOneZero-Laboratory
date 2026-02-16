@@ -54,9 +54,20 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.SharedTypeEntity<Picture>("ProductsPictures");
-        modelBuilder.SharedTypeEntity<Picture>("ProfilesPictures");
-        modelBuilder.SharedTypeEntity<Picture>("BrandsPictures");
-        modelBuilder.Ignore<Picture>();
+        modelBuilder.SharedTypeEntity<Picture>("ProductsPictures", entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.ToTable("ProductsPictures");
+        });
+        modelBuilder.SharedTypeEntity<Picture>("ProfilesPictures", entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.ToTable("ProfilesPictures");
+        });
+        modelBuilder.SharedTypeEntity<Picture>("BrandsPictures", entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.ToTable("BrandsPictures");
+        });
     }
 }

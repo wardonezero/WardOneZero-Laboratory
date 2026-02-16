@@ -7,7 +7,7 @@ namespace DataFormulaLibrary.Data;
 
 public class CatalogContext(DbContextOptions<CatalogContext> options) : DbContext(options)
 {
-    public const string ProductPicturesTableName = "ProductsPictures";
+    public const string ProductsPicturesTableName = "ProductsPictures";
     public const string BrandsPicturesTableName = "BrandsPictures";
 
     public DbSet<Brand> Brands { get; set; }
@@ -22,14 +22,21 @@ public class CatalogContext(DbContextOptions<CatalogContext> options) : DbContex
     public DbSet<MetaData> ProductsMetaDatas { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Review> ProductsReviews { get; set; }
-    public DbSet<Picture> ProductsPictures => Set<Picture>(ProductPicturesTableName);
+    public DbSet<Picture> ProductsPictures => Set<Picture>(ProductsPicturesTableName);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.SharedTypeEntity<Picture>(ProductPicturesTableName);
-        modelBuilder.SharedTypeEntity<Picture>(BrandsPicturesTableName);
-        modelBuilder.Ignore<Picture>();
+        modelBuilder.SharedTypeEntity<Picture>(ProductsPicturesTableName, entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.ToTable(ProductsPicturesTableName);
+        });
+        modelBuilder.SharedTypeEntity<Picture>(BrandsPicturesTableName, entity =>
+        {
+            entity.HasKey(p => p.Id);
+            entity.ToTable(BrandsPicturesTableName);
+        });
     }
 }

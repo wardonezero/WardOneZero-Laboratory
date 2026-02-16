@@ -66,7 +66,7 @@
 
     private async Task LoadProductPictures()
     {
-        pictures = await pictureService.GetProductPicturesAsync(ProductId, CatalogContext.ProductPicturesTableName);
+        pictures = await pictureService.GetProductPicturesAsync(ProductId, CatalogContext.ProductsPicturesTableName);
         StateHasChanged();
     }
 
@@ -81,8 +81,8 @@
         if (selectedFile != null)
         {
             using var stream = selectedFile.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024);
-            await pictureService.SavePictureAsync(stream, newPicture.Extention, newPicture.DisplayOrder, newPicture.Title, newPicture.Alt, tableName);
-            await pictureService.AddOrRemoveProductPictureAsync(ProductId, newPicture.Id);
+            int newPictureId = await pictureService.SavePictureAsync(stream, newPicture.Extention, newPicture.DisplayOrder, newPicture.Title, newPicture.Alt, tableName);
+            await pictureService.AddOrRemoveProductPictureAsync(ProductId, newPictureId);
             newPicture = new();
             selectedFile = null;
             await LoadProductPictures();

@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DataFormulaLibrary\DataFormulaLibrary.csproj" />
     <ProjectReference Include="..\..\ServiceFormulaLibrary\ServiceFormulaLibrary.csproj" />
     <ProjectReference Include="..\WardOneZeroCommerce.Client\WardOneZeroCommerce.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.2" />

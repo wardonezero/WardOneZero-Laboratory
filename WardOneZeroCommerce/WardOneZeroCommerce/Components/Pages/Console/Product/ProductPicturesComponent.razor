@@ -80,7 +80,7 @@
         if (selectedFile != null)
         {
             using var stream = selectedFile.OpenReadStream(maxAllowedSize: 5 * 1024 * 1024);
-            int newPictureId = await pictureService.SavePictureAsync(stream, newPicture.Extention, newPicture.DisplayOrder, newPicture.Title, newPicture.Alt, tableName);
+            int newPictureId = await pictureService.SavePictureAsync(stream, newPicture.Extention, newPicture.DisplayOrder, newPicture.Title, newPicture.Alt, CatalogContext.ProductsPicturesTableName);
             await pictureService.AddOrRemoveProductPictureAsync(ProductId, newPictureId);
             newPicture = new();
             selectedFile = null;

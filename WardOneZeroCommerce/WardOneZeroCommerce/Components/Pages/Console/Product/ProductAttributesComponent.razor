@@ -1,0 +1,58 @@
+﻿@inject ProductService productService
+@inject GenericDataService<AttributeContext> attributeService
+
+<table>
+    <thead>
+        <tr>
+            <th>Checkbox</th>
+            <th>Attribute</th>
+            <th>Value</th>
+            <th>Is selectable</th>
+            <th>Display order</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataFormulaLibrary.Models.Attribute.AttributeValue attributeValue in attributesValues)
+        {
+            <tr>
+                <td><input type="checkbox" /></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <button type="button" class="edit">Edit</button>
+                    <button type="button" class="delete" @onclick="() => DeleteAttributeValue()">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+    [Parameter] public int ProductId { get; set; }
+    [Parameter] public bool IsSpecefication { get; set; } = false;
+    private List<DataFormulaLibrary.Models.Attribute.AttributeValue> attributesValues = [];
+    private List<string> attributesNames = [];
+    private DataFormulaLibrary.Models.Attribute.AttributeValue newAttributeValue = new();
+    private IBrowserFile? selectedFile;
+    private int attributePage = 1;
+    private List<DataFormulaLibrary.Models.Attribute.Attribute> attributes = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(IsSpecefication)
+            newAttributeValue.IsSelectable = false;
+        await LoadAttributes();
+        attributes = await attributeService.GetPagedAsync<DataFormulaLibrary.Models.Attribute.Attribute>(attributePage, 100);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadAttributes()
+    {        
+        (attributesValues, attributesNames) = await productService.GetProductAttributesValuesAsync(ProductId);
+    }
+    private async Task CreateAttributeValue() { }
+    private async Task DeleteAttributeValue() { }
+    private async Task DeleteAttributesValue() { }
+}

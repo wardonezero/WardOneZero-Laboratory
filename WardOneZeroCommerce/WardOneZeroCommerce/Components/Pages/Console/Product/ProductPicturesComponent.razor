@@ -56,7 +56,6 @@
     private List<Picture> pictures = [];
     private Picture newPicture = new();
     private IBrowserFile? selectedFile;
-    private const string tableName = "ProductsPictures";
 
     protected override async Task OnInitializedAsync()
     {
@@ -91,7 +90,7 @@
 
     private async Task DeletePicture(int pictureId)
     {
-        await pictureService.DeletePictureAsync(pictureId, tableName);
+        await pictureService.DeletePictureAsync(pictureId, CatalogContext.ProductsPicturesTableName);
         await pictureService.AddOrRemoveProductPictureAsync(ProductId, pictureId, true);
     }
 }

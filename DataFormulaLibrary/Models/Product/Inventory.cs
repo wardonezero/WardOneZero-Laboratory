@@ -6,6 +6,7 @@ public class Inventory
     public int InStock { get; set; } = 0;
 
     public List<int> PicturesIds { get; set; } = [];
+    public List<int> VideosIds { get; set; } = [];
     public List<int> AttributesValuesIds { get; set; } = [];
     public List<int> ReviewsIds { get; set; } = [];
 }

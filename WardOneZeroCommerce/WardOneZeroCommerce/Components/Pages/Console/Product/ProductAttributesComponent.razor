@@ -1,6 +1,30 @@
 ﻿@inject ProductService productService
 @inject GenericDataService<AttributeContext> attributeService
-
+<EditForm Model="newAttributeValue" OnValidSubmit="CreateAttributeValue" FormName="AddAttributeValueForm">
+    <DataAnnotationsValidator />
+    <button type="submit">Save Attribute Value</button>
+    <div>
+        <InputSelect @bind-Value="newAttributeValue.AttributeId" name="AttributeId">
+            <option value="">Select Attribute</option>
+            @foreach (var attributeItem in attributes)
+            {
+                <option value="@attributeItem.Id">@attributeItem.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <div>
+        <label>Value</label>
+        <InputText @bind-Value="newAttributeValue.Value" placeholder="Attribute Value" />
+    </div>
+    <div>
+        <label>Is selectable</label>
+        <InputCheckbox @bind-Value="newAttributeValue.IsSelectable" />
+    </div>
+    <div>
+        <label>Display order</label>
+        <input type="number" min="0" max="255" @bind="newAttributeValue.DisplayOrder" />
+    </div>
+</EditForm>
 <table>
     <thead>
         <tr>
@@ -13,17 +37,17 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (DataFormulaLibrary.Models.Attribute.AttributeValue attributeValue in attributesValues)
+        @foreach (var attributeValue in attributesValues)
         {
             <tr>
                 <td><input type="checkbox" /></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>@attributeValue.Key</td>
+                <td>@attributeValue.Value.Value</td>
+                <td>@attributeValue.Value.IsSelectable</td>
+                <td>@attributeValue.Value.DisplayOrder</td>
                 <td>
                     <button type="button" class="edit">Edit</button>
-                    <button type="button" class="delete" @onclick="() => DeleteAttributeValue()">Delete</button>
+                    <button type="button" class="delete" @onclick="() => DeleteAttributeValue(attributeValue.Value.Id)">Delete</button>
                 </td>
             </tr>
         }
@@ -32,27 +56,40 @@
 @code {
     [Parameter] public int ProductId { get; set; }
     [Parameter] public bool IsSpecefication { get; set; } = false;
-    private List<DataFormulaLibrary.Models.Attribute.AttributeValue> attributesValues = [];
-    private List<string> attributesNames = [];
+    private Dictionary<string, DataFormulaLibrary.Models.Attribute.AttributeValue> attributesValues = [];
+
     private DataFormulaLibrary.Models.Attribute.AttributeValue newAttributeValue = new();
-    private IBrowserFile? selectedFile;
+
     private int attributePage = 1;
-    private List<DataFormulaLibrary.Models.Attribute.Attribute> attributes = [];
+    private List<ItemIdNameViewModel> attributes = [];
 
     protected override async Task OnInitializedAsync()
     {
-        if(IsSpecefication)
+        if (IsSpecefication)
             newAttributeValue.IsSelectable = false;
         await LoadAttributes();
-        attributes = await attributeService.GetPagedAsync<DataFormulaLibrary.Models.Attribute.Attribute>(attributePage, 100);
+        attributes = await attributeService.GetItemIdNameOnlyPagedAsync<DataFormulaLibrary.Models.Attribute.Attribute>(attributePage, 100);
         await base.OnInitializedAsync();
     }
 
     private async Task LoadAttributes()
-    {        
-        (attributesValues, attributesNames) = await productService.GetProductAttributesValuesAsync(ProductId);
+    {
+        attributesValues = await productService.GetProductAttributesValuesAsync(ProductId, IsSpecefication);
     }
-    private async Task CreateAttributeValue() { }
-    private async Task DeleteAttributeValue() { }
-    private async Task DeleteAttributesValue() { }
+
+    private async Task CreateAttributeValue()
+    {
+        int newAttributeValueId = await attributeService.CreateAsync<DataFormulaLibrary.Models.Attribute.AttributeValue>(newAttributeValue);
+        await productService.AddOrRemoveProductAttributeAsync(ProductId, newAttributeValueId);
+        newAttributeValue = new();
+        await LoadAttributes();
+    }
+
+    private async Task DeleteAttributeValue(int attributeId)
+    {
+        await attributeService.DeleteAsync<DataFormulaLibrary.Models.Attribute.AttributeValue>(attributeId);
+        await productService.AddOrRemoveProductAttributeAsync(ProductId, attributeId, true);
+    }
+
+    private async Task DeleteAttributesValues() { }
 }

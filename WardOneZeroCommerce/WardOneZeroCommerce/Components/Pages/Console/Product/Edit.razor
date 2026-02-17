@@ -4,7 +4,6 @@
 @inject GenericDataService<CatalogContext> catalogService
 @inject ProductService productService
 @inject NavigationManager Navigation
-@using DataFormulaLibrary.Models.Product
 @if (model != null)
 {
     <EditForm id="create-product" Model="model" OnSubmit="EditProduct">
@@ -103,9 +102,11 @@
         </details>
         <details>
             <summary>Specefication attributes</summary>
+            <ProductAttributesComponent ProductId="@ProductId" IsSpecefication="true" />
         </details>
         <details>
             <summary>Attributes</summary>
+            <ProductAttributesComponent ProductId="@ProductId" />
         </details>
         <details>
             <summary>Attachments</summary>
@@ -141,7 +142,7 @@
         subcategories.AddRange(await catalogService.GetItemIdNameOnlyPagedAsync<Subcategory>(subcategoryPage, 100));
         brands.AddRange(await catalogService.GetItemIdNameOnlyPagedAsync<Brand>(brandPage, 100));
         model = await productService.GetProductForEdit(ProductId);
-        base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
 
     private async Task EditProduct(EditContext context)

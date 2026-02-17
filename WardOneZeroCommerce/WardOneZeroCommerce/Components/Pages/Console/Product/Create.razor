@@ -3,7 +3,6 @@
 @rendermode InteractiveServer
 @inject GenericDataService<CatalogContext> catalogService
 @inject NavigationManager Navigation
-@using DataFormulaLibrary.Models.Product
 <div class="console-actions">
     <h2>Create product</h2>
     <button type="submit" form="create-product" @onclick="() => continueEditing = false">Save</button>

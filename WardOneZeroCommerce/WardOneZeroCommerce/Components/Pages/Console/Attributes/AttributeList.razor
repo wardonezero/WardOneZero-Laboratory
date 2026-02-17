@@ -1,0 +1,74 @@
+﻿@page "/console/attributes"
+@layout ConsoleLayout
+@rendermode InteractiveServer
+@inject GenericDataService<AttributeContext> attributeService
+
+<EditForm Model="newAttribute" OnValidSubmit="CreateAttribute" FormName="CreateAttributeForm">
+    <DataAnnotationsValidator />
+    <button type="submit">Save Attribute</button>
+    <div>
+        <label>Name</label>
+        <InputText @bind-Value="newAttribute.Name" placeholder="Attribute Value" />
+    </div>
+    <div>
+        <label>Description</label>
+        <InputText @bind-Value="newAttribute.Description" />
+    </div>
+</EditForm>
+
+<table>
+    <thead>
+        <tr>
+            <th>Checkbox</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var attributeValue in attributes)
+        {
+            <tr>
+                <td><input type="checkbox" /></td>
+                <td>@attributeValue.Name</td>
+                <td>@attributeValue.Description</td>
+                <td>
+                    <button type="button" class="edit">Edit</button>
+                    <button type="button" class="delete" @onclick="() => DeleteAttribute(attributeValue.Id)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private int attributesPage = 1;
+    private List<DataFormulaLibrary.Models.Attribute.Attribute> attributes = [];
+
+    private DataFormulaLibrary.Models.Attribute.Attribute newAttribute = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAttributeList();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadAttributeList()
+    {
+        attributes.AddRange(await attributeService.GetPagedAsync<DataFormulaLibrary.Models.Attribute.Attribute>(attributesPage, 100));
+    }
+
+    private async Task CreateAttribute()
+    {
+        await attributeService.CreateAsync(newAttribute);
+        newAttribute = new();
+        await LoadAttributeList();
+    }
+
+    private async Task DeleteAttribute(int attributeId)
+    {
+        await attributeService.DeleteAsync<DataFormulaLibrary.Models.Attribute.Attribute>(attributeId);
+    }
+
+    private async Task DeleteAttributes() { }
+}

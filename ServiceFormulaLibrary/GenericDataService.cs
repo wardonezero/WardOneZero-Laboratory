@@ -33,6 +33,22 @@ public class GenericDataService<TContext>(TContext context) where TContext : DbC
             .FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
     }
 
+    public async Task<bool> DeleteManyAsync<TEntity>(List<int> ids) where TEntity : class
+    {
+        if (ids is null || ids.Count == 0) return false;
+        try
+        {
+            int affectedRows = await context.Set<TEntity>()
+                .Where(e => ids.Contains(EF.Property<int>(e, "Id")))
+                .ExecuteDeleteAsync();
+            return affectedRows == ids.Count;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public async Task<bool> DeleteAsync<TEntity>(int id) where TEntity : class
     {
         try

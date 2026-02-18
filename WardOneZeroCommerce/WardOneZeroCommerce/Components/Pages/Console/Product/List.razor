@@ -45,7 +45,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        products.AddRange(await productService.GetPagedAsync(productPage));
+        products.AddRange(await productService.GetProductTablePagedAsync(productPage));
         await base.OnInitializedAsync();
     }
 }

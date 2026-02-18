@@ -8,5 +8,4 @@ public class WishListItem
     public bool IsInStock { get; set; } = true;
     public decimal Price { get; set; } = 0.0m;
     public float Discount { get; set; } = 0.0f;
-
 }

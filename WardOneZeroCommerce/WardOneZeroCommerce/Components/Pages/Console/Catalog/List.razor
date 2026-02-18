@@ -102,7 +102,6 @@
     private void EditCategory(Category item) { category = item; isEditing = true; StateHasChanged(); }
     private void EditSubcategory(Subcategory item) { subcategory = item; isEditing = true; StateHasChanged(); }
 
-
     private RenderFragment RenderTable<T>(List<T>? items, Action<T> onEdit) where T : ICatalogItem => __builder =>
     {
         <table>

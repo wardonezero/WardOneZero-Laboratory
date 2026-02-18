@@ -89,7 +89,7 @@ public class ProductService(CatalogContext context, AttributeContext attributeCo
                       }).FirstOrDefaultAsync();
     }
 
-    public async Task<List<ProductTableViewModel>> GetPagedAsync(int page = 1, byte size = 20)
+    public async Task<List<ProductTableViewModel>> GetProductTablePagedAsync(int page = 1, byte size = 20)
     {
         return await (from p in context.Products.AsNoTracking()
                       join m in context.ProductsMetaDatas.AsNoTracking() on p.Id equals m.Id

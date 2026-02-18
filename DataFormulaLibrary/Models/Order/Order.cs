@@ -14,5 +14,4 @@ public class Order
     public float Discount { get; set; } = 0.0f;
     public decimal Tax { get; set; } = 0.0m;
     public decimal Total { get; set; } = 0.0m;
-
 }

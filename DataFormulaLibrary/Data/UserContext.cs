@@ -11,7 +11,7 @@ public class UserContext(DbContextOptions<UserContext> options) : DbContext(opti
 
     public DbSet<Cart> Carts { get; set; }
     public DbSet<WishList> WishLists { get; set; }
-    public DbSet<WishListItem> WishListItems { get; set; }
+    public DbSet<WishListItem> WishListsItems { get; set; }
     public DbSet<Picture> ProfilesPictures => Set<Picture>(ProfilesPicturesTableName);
     public DbSet<User> Users { get; set; }
     public DbSet<Models.User.MetaData> UsersMetaData { get; set; }

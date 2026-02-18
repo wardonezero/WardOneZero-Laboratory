@@ -18,7 +18,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
     public DbSet<AttributeValue> AttributeValues { get; set; }
     public DbSet<Cart> Carts { get; set; }
     public DbSet<WishList> WishLists { get; set; }
-    public DbSet<WishListItem> WishListItems { get; set; }
+    public DbSet<WishListItem> WishListsItems { get; set; }
     public DbSet<Models.Order.MetaData> OrdersMetaDatas { get; set; }
     public DbSet<Models.Order.Order> Orders { get; set; }
     public DbSet<Models.Order.OrderItem> OrderItems { get; set; }

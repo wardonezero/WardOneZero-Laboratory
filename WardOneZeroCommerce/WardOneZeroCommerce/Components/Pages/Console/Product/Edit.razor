@@ -34,7 +34,7 @@
             <div class="product-metadata">
                 <div>
                     <select @bind="model.MetaData.DepartmentId">
-                        <option value="0">Select Department</option>
+                        <option value="@model.MetaData.DepartmentId"></option>
                         @foreach (ItemIdNameViewModel department in departments)
                         {
                             <option value="@department.Id">@department.Name</option>
@@ -42,7 +42,7 @@
                     </select>
                     <ValidationMessage For="@(() => model.MetaData.DepartmentId)" />
                     <select @bind="model.MetaData.CategoryId">
-                        <option value="0">Select Category</option>
+                        <option value="@model.MetaData.CategoryId">@model.Category</option>
                         @foreach (ItemIdNameViewModel category in categories)
                         {
                             <option value="@category.Id">@category.Name</option>
@@ -50,7 +50,7 @@
                     </select>
                     <ValidationMessage For="@(() => model.MetaData.CategoryId)" />
                     <select @bind="model.MetaData.SubcategoryId">
-                        <option value="0">Select Subcategory</option>
+                        <option value="@model.MetaData.SubcategoryId">@model.Subcategory</option>
                         @foreach (ItemIdNameViewModel subcategory in subcategories)
                         {
                             <option value="@subcategory.Id">@subcategory.Name</option>
@@ -58,7 +58,7 @@
                     </select>
                     <ValidationMessage For="@(() => model.MetaData.SubcategoryId)" />
                     <select @bind="model.MetaData.BrandId">
-                        <option value="@model.MetaData.SubcategoryId"></option>
+                        <option value="@model.MetaData.BrandId">@model.Brand</option>
                         @foreach (ItemIdNameViewModel brand in brands)
                         {
                             <option value="@brand.Id">@brand.Name</option>
